@@ -1,8 +1,7 @@
-# FlowSpec: 
-A lightweight JSON schema for defining and automating multi-step workflows.
+FlowSpec
 ===============================
 
-A standardized schema for defining automation workflows.
+A lightweight standardized JSON schema for defining and automating multi-step workflows.
 
 This document is a first draft of a standardized schema for defining AI-driven automation workflows. It is designed to be both human-readable and machine-interpretable, allowing you to share, visualize, and execute workflows with ease.
 
@@ -15,6 +14,7 @@ Table of Contents
 -   Step Object
 -   Global Transitions
 -   Example
+-   Existing Schema-like Workflow Protocols
 -   Extending the Schema
 -   How to Contribute
 
@@ -98,7 +98,10 @@ The globalTransitions property allows you to set default behaviours for certain 
 Example of globalTransitions:
 
 ```json
-{ "rerun": "default_rerun_logic", "human_needed": "default_human_review" }
+{
+    "rerun": "default_rerun_logic",
+    "human_needed": "default_human_review"
+}
 ```
 
 Any step that does not explicitly define its own "rerun" or "human_needed" transition will use these global defaults.
@@ -108,8 +111,64 @@ Example
 
 Below is a full example of a workflow defined using this schema:
 ```json
-{ "workflowTitle": "Prospector Agent Flow", "workflowDescription": "This workflow gathers and validates niche ideas and domain availability.", "globalTransitions": { "rerun": "default_rerun_logic", "human_needed": "default_human_review" }, "steps": [ { "stepTitle": "Idea Generation", "stepId": "idea_gen", "stepDescription": "Generate a list of potential ideas based on trends.", "action": "generateIdeas", "parameters": { "prompt": "Generate creative business ideas based on current trends." }, "results": { "ideas": "array of idea strings" }, "transitions": { "success": "trend_analysis", "fail": "report_failure" } }, { "stepTitle": "Trend Analysis", "stepId": "trend_analysis", "stepDescription": "Analyze trending data for each idea.", "action": "analyzeTrends", "parameters": { "ideas": "previous step's ideas" }, "results": { "trendData": "array of trend metrics" }, "transitions": { "success": "finalize_results", "fail": "report_failure", "human_needed": "custom_human_review" } } // Additional steps as needed... ] }
+{
+  "workflowTitle": "Prospector Agent Flow",
+  "workflowDescription": "This workflow gathers and validates niche ideas and domain availability.",
+  "globalTransitions": {
+    "rerun": "default_rerun_logic",
+    "human_needed": "default_human_review"
+  },
+  "steps": [
+    {
+      "stepTitle": "Idea Generation",
+      "stepId": "idea_gen",
+      "stepDescription": "Generate a list of potential ideas based on trends.",
+      "action": "generateIdeas",
+      "parameters": {
+        "prompt": "Generate creative business ideas based on current trends."
+      },
+      "results": {
+        "ideas": "array of idea strings"
+      },
+      "transitions": {
+        "success": "trend_analysis",
+        "fail": "report_failure"
+        // "rerun" and "human_needed" will use global settings unless defined here.
+      }
+    },
+    {
+      "stepTitle": "Trend Analysis",
+      "stepId": "trend_analysis",
+      "stepDescription": "Analyze trending data for each idea.",
+      "action": "analyzeTrends",
+      "parameters": {
+        "ideas": "previous step's ideas"
+      },
+      "results": {
+        "trendData": "array of trend metrics"
+      },
+      "transitions": {
+        "success": "finalize_results",
+        "fail": "report_failure",
+        "human_needed": "custom_human_review"  // This overrides the global default.
+      }
+    }
+    // Additional steps as needed...
+  ]
+}
+
 ```
+
+Existing Schema-like Workflow Protocols
+---------------------------------------
+
+-   **BPMN 2.0**: An industry-standard graphical notation with an XML-based specification for modeling business processes.
+-   **BPEL**: An XML language for orchestrating web services, historically used in service-oriented architectures.
+-   **AWS Step Functions**: A JSON-based state machine language designed for orchestrating AWS services in serverless architectures.
+-   **Azure Logic Apps**: A JSON-based workflow definition tool integrated with Azure, featuring both visual and code views.
+-   **WDL & CWL**: Workflow languages geared toward data-intensive pipelines and scientific computing, emphasizing reproducibility.
+-   **Argo Workflows & Tekton**: Kubernetes-native, YAML-based orchestration engines that excel in containerized CI/CD pipelines.
+-   **Custom DSLs**: Many teams opt to create lightweight JSON/YAML schemas tailored to their specific automation needs.
 
 Extending the Schema
 --------------------
