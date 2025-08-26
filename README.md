@@ -184,7 +184,9 @@ This schema is designed to be modular and extendable. As your workflows evolve, 
 
 Feel free to customize the schema to best fit your project needs while maintaining clarity and consistency.
 
-Extending the Schema
+Moving this forward
 --------------------
 
 I appreciate any and all feedback, please do raise issues, submit pull requests, or contact me directly via [ProfitSwarm.ai](https://profitswarm.ai) or [@woodyhayday](https://x.com/woodyhayday).
+
+My aim with this is to write something we can all use, regardless of which [AI workflow tool](https://profitswarm.ai/category/ai-tool-reviews/) we're using. Let's make it work!
